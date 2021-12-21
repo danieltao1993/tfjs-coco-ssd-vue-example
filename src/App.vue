@@ -1,5 +1,6 @@
 <template>
 <div id="app">
+  <load-image></load-image>
   <h3 v-if="!isVideoStreamReady && !initFailMessage">Initializing webcam stream ...</h3>
   <h3 v-if="!isModelReady && !initFailMessage">loading model ...</h3>
   <h3 v-if="initFailMessage">Failed to init stream and/or model - {{ initFailMessage }}</h3>
@@ -24,8 +25,10 @@
 import '@tensorflow/tfjs-backend-cpu'
 import '@tensorflow/tfjs-backend-webgl'
 import * as cocoSsd from '@tensorflow-models/coco-ssd'
+import LoadImage from './LoadImage.vue'
 
 export default {
+  components: { LoadImage },
   name: 'app',
 
   data () {
