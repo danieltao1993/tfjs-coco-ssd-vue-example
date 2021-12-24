@@ -1,25 +1,11 @@
 <template>
-  <div class="clearfix">
-    <a-upload
-      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-      list-type="picture-card"
-      :file-list="fileList"
-      @preview="handlePreview"
-      @change="handleChange"
-    >
-      <div v-if="fileList.length < 8">
-        <a-icon type="plus" />
-        <div class="ant-upload-text">Upload</div>
-      </div>
-    </a-upload>
-    <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-      <img alt="example" style="width: 100%" :src="previewImage" />
-    </a-modal>
+  <div>
+    HELLO
+    <img :src="images[1]" />
   </div>
 </template>
 <script>
-
-import img1 from './assets/1.jpeg';
+import img1 from "./assets/1.jpeg";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -34,6 +20,7 @@ export default {
     return {
       previewVisible: false,
       previewImage: "",
+      images: [img1],
       fileList: [
         {
           uid: "-1",
@@ -67,8 +54,8 @@ export default {
       ],
     };
   },
-  mounted(){
-    // this.previewImage = img1;
+  mounted() {
+    this.images = [img1];
   },
   methods: {
     handleCancel() {
