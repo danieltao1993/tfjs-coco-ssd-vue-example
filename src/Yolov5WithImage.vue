@@ -31,7 +31,7 @@ export default {
 </script>
 <style>
 .cam {
-  width: 300px;
-  height: 300px;
+  width: 1000px;
+  height: auto;
 }
 </style>
