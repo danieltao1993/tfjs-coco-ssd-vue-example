@@ -28,6 +28,7 @@
 import "@tensorflow/tfjs-backend-cpu";
 import "@tensorflow/tfjs-backend-webgl";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
+import { drawOnCanvas } from "./utils/drawer";
 
 export default {
   components: {},
@@ -156,7 +157,8 @@ export default {
       if (!this.isModelReady) return;
 
       const predictions = await this.model.detect(this.$refs.video);
-      this.renderPredictions(predictions);
+      drawOnCanvas(this.$refs.canvas, predictions);
+
       requestAnimationFrame(() => {
         this.detectObjects();
       });
@@ -174,29 +176,6 @@ export default {
           console.log("Failed to init stream and/or model");
           this.initFailMessage = error;
         });
-    },
-
-    renderPredictions(predictions) {
-      // get the context of canvas
-      const ctx = this.$refs.canvas.getContext("2d");
-      // clear the canvas
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      predictions.forEach((prediction) => {
-        ctx.beginPath();
-        ctx.rect(...prediction.bbox);
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = "red";
-        ctx.fillStyle = "red";
-        ctx.stroke();
-        ctx.shadowColor = "white";
-        ctx.shadowBlur = 10;
-        ctx.font = "24px Arial bold";
-        ctx.fillText(
-          `${(prediction.score * 100).toFixed(1)}% ${prediction.class}`,
-          prediction.bbox[0],
-          prediction.bbox[1] + 20
-        );
-      });
     },
   },
 

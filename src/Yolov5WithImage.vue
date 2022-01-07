@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import img1 from "./assets/1.jpeg";
+import img1 from "./assets/cars/1.jpeg";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
