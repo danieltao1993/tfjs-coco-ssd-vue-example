@@ -19,16 +19,12 @@
     <div>
       <div>加载时间: {{ loadingConsumeTime }}(ms)</div>
       <div>预测时间: {{ predictConsumeTime }}(ms)</div>
-      <textarea v-model="JSON.stringify(predictions)" class="result"> </textarea>
+      <textarea v-model="JSON.stringify(predictions)" class="result">
+      </textarea>
     </div>
   </div>
 </template>
 <script>
-// import img1 from "./assets/cars/1.jpeg";
-// import img1 from "./assets/cars/1.jpeg";
-// import img1 from "./assets/cars/1.jpeg";
-// import img1 from "./assets/cars/1.jpeg";
-// import img1 from "./assets/cars/1.jpeg";
 import "@tensorflow/tfjs-backend-cpu";
 import "@tensorflow/tfjs-backend-webgl";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";

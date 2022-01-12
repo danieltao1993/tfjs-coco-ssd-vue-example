@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <a-tabs default-active-key="CocoImage">
+    <a-tabs default-active-key="Yolov5WithImage">
       <a-tab-pane key="CocoImage" tab="CocoImage">
         <CocoImage />
       </a-tab-pane>
@@ -20,7 +20,6 @@
 <script>
 import "@tensorflow/tfjs-backend-cpu";
 import "@tensorflow/tfjs-backend-webgl";
-import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import Yolov5WithImage from "./Yolov5WithImage.vue";
 import CocoSSDWithCam from "./CocoSSDWithCam.vue";
 import CocoImage from "./CocoImage.vue";
