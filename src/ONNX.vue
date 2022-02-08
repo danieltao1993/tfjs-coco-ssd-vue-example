@@ -29,6 +29,7 @@ import "@tensorflow/tfjs-backend-cpu";
 import "@tensorflow/tfjs-backend-webgl";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import { drawOnCanvas, initContext, drawRects } from "./utils/drawer";
+import resizeImageData from "resize-image-data";
 
 import ndarray from "ndarray";
 import ops from "ndarray-ops";
@@ -93,9 +94,11 @@ export default {
     },
     async initSession() {
       let url = location.href + "onnx_model/" + "yolox_s.onnx";
-      const session = await ort.InferenceSession.create(url,{
-    executionProviders: ["webgl"],
-  });
+      // const session = await ort.InferenceSession.create(url, {
+      //   executionProviders: ["webgl"],
+      // });
+      const session = new InferenceSession({ backendHint: "webgl" });
+      await session.loadModel(url);
       return session;
     },
 
@@ -106,7 +109,16 @@ export default {
         ctx.canvas.width,
         ctx.canvas.height
       );
-      const { data, width, height } = imageData;
+
+      const resizedImgData = resizeImageData(
+        imageData,
+        640,
+        640,
+        "bilinear-interpolation"
+      );
+
+      console.log("resized_img: ", resizedImgData);
+      const { data, width, height } = resizedImgData;
       // data processing
       const dataTensor = ndarray(new Float32Array(data), [width, height, 4]);
       const dataProcessedTensor = ndarray(
@@ -114,24 +126,12 @@ export default {
         [1, 3, width, height]
       );
 
-      ops.assign(
-        dataProcessedTensor.pick(0, 0, null, null),
-        dataTensor.pick(null, null, 0)
-      );
-      ops.assign(
-        dataProcessedTensor.pick(0, 1, null, null),
-        dataTensor.pick(null, null, 1)
-      );
-      ops.assign(
-        dataProcessedTensor.pick(0, 2, null, null),
-        dataTensor.pick(null, null, 2)
-      );
-
       const tensor = new Tensor(
         new Float32Array(width * height * 3),
         "float32",
         [1, 3, width, height]
       );
+      
       tensor.data.set(dataProcessedTensor.data);
       return tensor;
     },
