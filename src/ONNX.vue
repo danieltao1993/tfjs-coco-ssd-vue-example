@@ -93,12 +93,15 @@ export default {
       // drawRects(this.predictions)
     },
     async initSession() {
-      let url = location.href + "onnx_model/" + "yolox_s.onnx";
-      // const session = await ort.InferenceSession.create(url, {
-      //   executionProviders: ["webgl"],
-      // });
-      const session = new InferenceSession({ backendHint: "webgl" });
-      await session.loadModel(url);
+      // let url = location.href + "onnx_model/" + "yolox_s.onnx";
+      let url = location.href + "yolox_nano.onnx";
+      const session = await ort.InferenceSession.create("./yolox_nano.onnx", {
+        executionProviders: ["wasm"],
+      });
+      console.log("session: ", session, session.inputNames);
+      // const session = new InferenceSession({ backendHint: "wasm" }); //webgl cpu wasm
+      // const session = new onnx.InferenceSession({ backendHint: "cpu" }); //webgl cpu wasm
+      // await session.loadModel("./yolox_nano.onnx");
       return session;
     },
 
@@ -117,13 +120,25 @@ export default {
         "bilinear-interpolation"
       );
 
-      console.log("resized_img: ", resizedImgData);
       const { data, width, height } = resizedImgData;
-      // data processing
+
       const dataTensor = ndarray(new Float32Array(data), [width, height, 4]);
       const dataProcessedTensor = ndarray(
         new Float32Array(width * height * 3),
         [1, 3, width, height]
+      );
+
+      ops.assign(
+        dataProcessedTensor.pick(0, 0, null, null),
+        dataTensor.pick(null, null, 0)
+      );
+      ops.assign(
+        dataProcessedTensor.pick(0, 1, null, null),
+        dataTensor.pick(null, null, 1)
+      );
+      ops.assign(
+        dataProcessedTensor.pick(0, 2, null, null),
+        dataTensor.pick(null, null, 2)
       );
 
       const tensor = new Tensor(
@@ -131,15 +146,35 @@ export default {
         "float32",
         [1, 3, width, height]
       );
-      
+      // Float32Array.from(tensor.data).set(dataProcessedTensor.data);
       tensor.data.set(dataProcessedTensor.data);
+      console.log("resized_img: ",tensor, dataProcessedTensor);
       return tensor;
+      // let t= new ort.Tensor("float32", new Float32Array(data), [width, height]);
+      // data processing
+      // const dataTensor = ndarray(new Float32Array(data), [width, height, 4]);
+      // const dataProcessedTensor = ndarray(
+      //   new Float32Array(width * height * 3),
+      //   [1, 3, width, height]
+      // );
+
+      // const tensor = new Tensor(
+      //   new Float32Array(width * height * 3),
+      //   "float32",
+      //   [1, 3, width, height]
+      // );
+
+      // tensor.data.set(dataProcessedTensor.data);
+      // return tensor;
     },
     async runModel(inputTensor) {
-      console.log("runModel: ", this.session, inputTensor);
-      const outputData = await this.session.run([inputTensor]);
+      let name0 = this.session.inputNames[0];
+      const feeds = { [name0]: inputTensor };
+      console.log("runModel: ", feeds);
+      const outputData = await this.session.run(feeds);
       const outputTensor = outputData.values().next().value;
-      return this.postprocess(outputTensor, this.inferenceTime);
+      console.log("outputTensor: ", outputTensor);
+      // return this.postprocess(outputTensor, this.inferenceTime);
     },
     async postprocess(tensor, inferenceTime) {
       console.log("tensor: ", tensor);

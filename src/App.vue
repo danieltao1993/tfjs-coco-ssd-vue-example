@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <a-tabs default-active-key="ONNX">
+    <a-tabs :default-active-key="defaultActiveKey">
+       <a-tab-pane key="NANODET" tab="NANODET">
+        <NANODET />
+      </a-tab-pane>
       <a-tab-pane key="ONNX" tab="ONNX">
         <ONNX />
       </a-tab-pane>
@@ -13,27 +16,31 @@
       <a-tab-pane key="CocoSSDWithCam" tab="CocoSSDWithCam">
         <CocoSSDWithCam />
       </a-tab-pane>
-      <a-tab-pane key="WebNN" tab="WebNN">
-        <WebNN />
-      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
 
 <script>
-import "@tensorflow/tfjs-backend-cpu";
-import "@tensorflow/tfjs-backend-webgl";
+
 import Yolov5WithImage from "./Yolov5WithImage.vue";
 import CocoSSDWithCam from "./CocoSSDWithCam.vue";
 import ONNX from "./ONNX.vue";
 import CocoImage from "./CocoImage.vue";
-import WebNN from "./webnn/WebNN.vue";
+import NANODET from "./NANODET.vue";
 
 export default {
-  components: { Yolov5WithImage, CocoSSDWithCam, CocoImage,ONNX, WebNN },
+  components: {
+    Yolov5WithImage,
+    CocoSSDWithCam,
+    CocoImage,
+    ONNX,
+    NANODET,
+  },
   name: "app",
   data() {
-    return {};
+    return {
+      defaultActiveKey: "Yolov5WithImage",
+    };
   },
   methods: {},
   mounted() {},

@@ -19,18 +19,19 @@ export const drawOnCanvas = (canvas, predictions) => {
   predictions.forEach((prediction) => {
     ctx.beginPath();
     ctx.rect(...prediction.bbox);
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 1;
     ctx.strokeStyle = "red";
     ctx.fillStyle = "red";
     ctx.stroke();
     ctx.shadowColor = "white";
-    ctx.shadowBlur = 10;
-    ctx.font = "24px Arial bold";
-    ctx.fillText(
-      `${(prediction.score * 100).toFixed(1)}% ${prediction.class}`,
-      prediction.bbox[0],
-      prediction.bbox[1] + 20
-    );
+    // ctx.shadowBlur = 10;
+    ctx.font = "14px Arial bold";
+    // ctx.fillText(
+    //   `${(prediction.score * 100).toFixed(1)}% ${prediction.class}`,
+    //   // `${(prediction.score * 100).toFixed(1)}% ${prediction.class}`,
+    //   prediction.bbox[0],
+    //   prediction.bbox[1] + 20
+    // );
   });
 };
 

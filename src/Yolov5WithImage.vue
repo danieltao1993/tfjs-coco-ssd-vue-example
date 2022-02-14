@@ -166,8 +166,9 @@ export default {
     },
     async initModel() {
       // const weights = "https://raw.githubusercontent.com/raisa314/yolov5_object_detection/main/public/best_web_model/model.json";
+      const weights = "https://zldrobit.github.io/web_model/model.json";
       // const weights = "/web_model/model.json";
-      const weights = "/best_web_model/model.json";
+      // const weights = "/best_web_model/model.json";
       this.isModelReady = false;
       let model = null;
       // const model = await loadGraphModel("http://127.0.0.1:8080/model.json");
@@ -179,16 +180,6 @@ export default {
       this.isModelReady = true;
       return model;
     },
-    // async predict() {
-    //   // if (this.model) this.model.dispose();
-    //   const image = this.$refs.img;
-    //   let t1 = new Date().valueOf();
-    //   this.predictions = await this.model.detect(image);
-    //   let t2 = new Date().valueOf();
-    //   this.predictConsumeTime = t2 - t1;
-    //   drawOnCanvas(this.$refs.canvas, this.predictions);
-    //   console.log("predictions: ", t2 - t1);
-    // },
     getBoxFromData({
       valid_detections_data,
       boxes_data,
@@ -210,7 +201,7 @@ export default {
         const score = scores_data[i].toFixed(2);
 
         const box = {
-          bbox: [x1, y1, x1 + width, y1 + height],
+          bbox: [x1, y1, width, height],
           class: klass,
           score: score,
         };
@@ -246,47 +237,54 @@ export default {
         newHeight
       );
     },
+    // async predict() {
+    //   // if (this.model) this.model.dispose();
+    //   const image = this.$refs.img;
+    //   let t1 = new Date().valueOf();
+    //   this.predictions = await this.model.detect(image);
+    //   let t2 = new Date().valueOf();
+    //   this.predictConsumeTime = t2 - t1;
+    //   drawOnCanvas(this.$refs.canvas, this.predictions);
+    //   console.log("predictions: ", t2 - t1);
+    // },
     async predict() {
       const image = this.$refs.img;
       const canvas = this.$refs.canvas;
       const ctx = canvas.getContext("2d");
       this.cropToCanvas(image, canvas, ctx);
 
-      const [modelWeight, modelHeight] = [image.width, image.height];
-      console.log("modelWeight, modelHeight: ", modelWeight, modelHeight);
       console.log("image: ", image);
-      // const c = document.getElementById("canvas");
+
+      let t1 = new Date().valueOf();
 
       const input = tf.tidy(() => {
         return tf.image
-          .resizeBilinear(tf.browser.fromPixels(image), [
-            modelWeight,
-            modelHeight,
-          ])
+          .resizeBilinear(tf.browser.fromPixels(image), [320, 320])
           .div(255.0)
           .expandDims(0);
       });
-      console.log("input: ", input);
-      setTimeout(() => {
-        this.model.executeAsync(input).then((res) => {
-          // Font options.
-          const [boxes, scores, classes, valid_detections] = res;
-          const boxes_data = boxes.dataSync();
-          const scores_data = scores.dataSync();
-          const classes_data = classes.dataSync();
-          const valid_detections_data = valid_detections.dataSync()[0];
-          const predictions = this.getBoxFromData({
-            boxes_data,
-            valid_detections_data,
-            classes_data,
-            scores_data,
-            canvas: this.$refs.canvas,
-          });
-          console.log("predictions: ", predictions);
-          drawOnCanvas(this.$refs.canvas, predictions);
-          tf.dispose(res);
+      const self = this;
+
+      this.model.executeAsync(input).then((res) => {
+        // Font options.
+        const [boxes, scores, classes, valid_detections] = res;
+        const boxes_data = boxes.dataSync();
+        const scores_data = scores.dataSync();
+        const classes_data = classes.dataSync();
+        const valid_detections_data = valid_detections.dataSync()[0];
+        const predictions = this.getBoxFromData({
+          boxes_data,
+          valid_detections_data,
+          classes_data,
+          scores_data,
+          canvas: this.$refs.canvas,
         });
-      }, 500);
+        console.log("predictions: ", predictions);
+        drawOnCanvas(this.$refs.canvas, predictions);
+        tf.dispose(res);
+        let t2 = new Date().valueOf();
+        self.predictConsumeTime = t2 - t1;
+      });
     },
   },
 };
@@ -303,18 +301,18 @@ div {
 
 .resultFrame {
   position: relative;
-  width: 640px;
-  height: 640px;
+  width: 320px;
+  height: 320px;
 
   .sourceImage {
     position: absolute;
-    width: 640px;
-    height: 640px;
+    width: 320px;
+    height: 320px;
   }
   canvas {
     position: absolute;
-    width: 640px;
-    height: 640px;
+    width: 320px;
+    height: 320px;
   }
   .loading {
     color: #f00;
