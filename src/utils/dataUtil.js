@@ -1,4 +1,7 @@
 import * as tf from "@tensorflow/tfjs";
+import {
+  v4 as uuidv4
+} from 'uuid';
 
 export async function prepareImageInput(image, [width, height]) {
   const buffer = tf.browser.fromPixels(image);
@@ -7,8 +10,8 @@ export async function prepareImageInput(image, [width, height]) {
   const normalize = cast.div(255);
   const expand = normalize.expandDims(0);
   const transpose = expand.transpose([0, 3, 1, 2]);
-  transpose.shape = transpose.shape.map(n=>Number(n))
-  transpose.strides = transpose.strides.map(n=>Number(n))
+  transpose.shape = transpose.shape.map(n => Number(n))
+  transpose.strides = transpose.strides.map(n => Number(n))
   return transpose;
   // return tf.tidy(() => {
   //   let imageTensor = tf.browser.fromPixels(image, /* numChannels= */ 3);
@@ -24,7 +27,11 @@ export async function prepareImageInput(image, [width, height]) {
 export function imageDataToTensor(data, dims) {
   // 1. filter out alpha
   // 2. transpose from [224, 224, 3] -> [3, 224, 224]
-  const [R, G, B] = [[], [], []];
+  const [R, G, B] = [
+    [],
+    [],
+    []
+  ];
   for (let i = 0; i < data.length; i += 4) {
     R.push(data[i]);
     G.push(data[i + 1]);
@@ -103,9 +110,38 @@ export async function readImageTensorFromFile(filePath, height, width) {
   });
 }
 
+function toLabelOutput(list) {
+  return list.map(item => {
+    const {
+      bbox,
+      class: _class,
+      path,
+      score
+    } = item;
+    return {
+      id: uuidv4(),
+      type: "rect",
+      score,
+      geometry: {
+        coordinate: path
+      },
+      class: _class,
+      properties: {
+        // parked: true
+      },
+      create_time: new Date().valueOf(),
+      create_person: "labeler",
+      image_id: "pathtoimageurl",
+      ai_assisted: true,
+      manual_edited: false
+    }
+  })
+}
+
 export default {
   loadImage,
   readImageTensorFromFile,
   prepareImageInput,
   imageDataToTensor,
+  toLabelOutput
 };

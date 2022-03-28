@@ -1,0 +1,102 @@
+[
+  {
+    "id": "22a898d9-dd55-4301-a98b-1fc400815cd0",
+    "type": "rect",
+    "score": "0.90",
+    "geometry": {
+      "coordinate": [
+        [127.54528045654297, 186.77284240722656],
+        [127.54528045654297, 237.22816467285156],
+        [230.7497787475586, 237.22816467285156],
+        [230.7497787475586, 186.77284240722656]
+      ]
+    },
+    "class": "bus",
+    "properties": {},
+    "create_time": 1648388539043,
+    "create_person": "labeler",
+    "image_id": "pathtoimageurl",
+    "ai_assisted": true,
+    "manual_edited": false
+  },
+  {
+    "id": "06e7927b-58e1-4754-9f36-37fbded64160",
+    "type": "rect",
+    "score": "0.82",
+    "geometry": {
+      "coordinate": [
+        [32.73915767669678, 205.7796287536621],
+        [32.73915767669678, 245.02748489379883],
+        [78.29434871673584, 245.02748489379883],
+        [78.29434871673584, 205.7796287536621]
+      ]
+    },
+    "class": "car",
+    "properties": {},
+    "create_time": 1648388539043,
+    "create_person": "labeler",
+    "image_id": "pathtoimageurl",
+    "ai_assisted": true,
+    "manual_edited": false
+  },
+  {
+    "id": "cf5b2a0e-5f3a-4285-be06-09fec7660b5d",
+    "type": "rect",
+    "score": "0.69",
+    "geometry": {
+      "coordinate": [
+        [103.85244369506836, 204.4668960571289],
+        [103.85244369506836, 219.1910171508789],
+        [117.61114120483398, 219.1910171508789],
+        [117.61114120483398, 204.4668960571289]
+      ]
+    },
+    "class": "car",
+    "properties": {},
+    "create_time": 1648388539043,
+    "create_person": "labeler",
+    "image_id": "pathtoimageurl",
+    "ai_assisted": true,
+    "manual_edited": false
+  },
+  {
+    "id": "80fbb12c-2040-41b6-bdb9-da2e0addd9d5",
+    "type": "rect",
+    "score": "0.64",
+    "geometry": {
+      "coordinate": [
+        [305.0454521179199, 203.01280975341797],
+        [305.0454521179199, 239.20669555664062],
+        [319.51642990112305, 239.20669555664062],
+        [319.51642990112305, 203.01280975341797]
+      ]
+    },
+    "class": "person",
+    "properties": {},
+    "create_time": 1648388539043,
+    "create_person": "labeler",
+    "image_id": "pathtoimageurl",
+    "ai_assisted": true,
+    "manual_edited": false
+  },
+  {
+    "id": "4f31665c-f04a-44a2-8d65-2a53f383f6d0",
+    "type": "rect",
+    "score": "0.58",
+    "geometry": {
+      "coordinate": [
+        [-2.8314590454101562, 279.02753829956055],
+        [-2.8314590454101562, 319.86474990844727],
+        [232.08459854125977, 319.86474990844727],
+        [232.08459854125977, 279.02753829956055]
+      ]
+    },
+    "class": "car",
+    "properties": {},
+    "create_time": 1648388539043,
+    "create_person": "labeler",
+    "image_id": "pathtoimageurl",
+    "ai_assisted": true,
+    "manual_edited": false
+  }
+]

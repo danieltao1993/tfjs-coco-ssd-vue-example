@@ -30,6 +30,7 @@ import "@tensorflow/tfjs-backend-webgl";
 // import tf from "@tensorflow/tfjs";
 // import modelJson from "./models/best_web_model/model.json";
 import { drawOnCanvas } from "./utils/drawer";
+import dataUtil from './utils/dataUtil';
 
 const tf = require("@tensorflow/tfjs");
 
@@ -202,6 +203,12 @@ export default {
 
         const box = {
           bbox: [x1, y1, width, height],
+          path: [
+            [x1, y1],
+            [x1, y1 + height],
+            [x1 + width, y1 + height],
+            [x1 + width, y1],
+          ],
           class: klass,
           score: score,
         };
@@ -279,6 +286,8 @@ export default {
           scores_data,
           canvas: this.$refs.canvas,
         });
+        let labels = dataUtil.toLabelOutput(predictions)
+        console.log('labels: ', labels);
         console.log("predictions: ", predictions);
         drawOnCanvas(this.$refs.canvas, predictions);
         tf.dispose(res);

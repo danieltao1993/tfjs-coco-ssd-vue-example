@@ -83,7 +83,11 @@ export default {
     },
     async initModel() {
       this.isModelReady = false;
-      const m = await cocoSsd.load();
+      const m = await cocoSsd.load({
+        base: "mobilenet_v2",
+        // base: "mobilenet_v1",
+        // base: "lite_mobilenet_v2", // default
+      });
       this.isModelReady = true;
       return m;
     },
